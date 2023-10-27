@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using C_proj_MKMN.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace C_proj_MKMN.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminPanelController : Controller
     {
 
