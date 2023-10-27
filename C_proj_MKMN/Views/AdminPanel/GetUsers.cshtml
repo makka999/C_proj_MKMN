@@ -14,24 +14,27 @@
        class="btn btn-primary mb-3" style="width:auto">
         Add new user
     </a>
-
     foreach (var user in Model)
     {
-        <div class="card mb-3">
-            <div class="card-header">
-                User Id : @user.Id
-            </div>
-            <div class="card-body d-flex flex-row align-items-center justify-content-between">
-                <div>
-                    <h5 class="card-title">@user.UserName </h5>
-                    <h6 class="ms-3"> Email: @user.Email</h6>
-               </div> 
-                <div>
-                    <a asp-action="EditUsers" asp-route-id="@user.Id" class="btn btn-danger">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-danger">Delete</a>
+        if (user.UserName != "ADMIN")
+        {
+            <div class="card mb-3">
+                <div class="card-header">
+                    User Id : @user.Id
                 </div>
-              </div>
-        </div>
+                <div class="card-body d-flex flex-row align-items-center justify-content-between">
+                    <div>
+                        <h5 class="card-title">@user.UserName </h5>
+                        <h6 class="ms-3"> Email: @user.Email</h6>
+                    </div>
+                    <div>
+                        <a asp-action="EditUsers" asp-route-id="@user.Id" class="btn btn-danger">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+        }
+
     }
  }
  else{
