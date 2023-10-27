@@ -12,6 +12,7 @@ namespace C_proj_MKMN.Controllers
     {
 
         private readonly UserManager<UserModel> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _context;
         
 
@@ -79,8 +80,9 @@ namespace C_proj_MKMN.Controllers
             return View(user); // Pass the user object to the view
         }
 
-        public async Task<IActionResult> PatchUser(string id, UserModel updatedUser)
+        public async Task<IActionResult> PatchUser(string id, UserModel updatedUser, String selectedRole)
         {
+            selectedRole = Request.Form["role"];
             if (id != updatedUser.Id)
             {
                 return NotFound();
@@ -93,6 +95,7 @@ namespace C_proj_MKMN.Controllers
 
             // Retrieve the existing user from the database
             var existingUser = await _userManager.FindByIdAsync(id);
+          
 
             if (existingUser == null)
             {
@@ -110,7 +113,19 @@ namespace C_proj_MKMN.Controllers
             //existingUser.LockoutEnabled = updatedUser.LockoutEnabled;
             //existingUser.LockoutEnd = updatedUser.LockoutEnd;
             existingUser.EmailConfirmed = updatedUser.EmailConfirmed;
+           
+            if (!string.IsNullOrEmpty(selectedRole))
+            {
+                if (await _roleManager.RoleExistsAsync(selectedRole))
+                {
+                    // Remove the user from existing roles
+                    var userRoles = await _userManager.GetRolesAsync(existingUser);
+                    await _userManager.RemoveFromRolesAsync(existingUser, userRoles);
 
+                    // Add the user to the selected role
+                    await _userManager.AddToRoleAsync(existingUser, selectedRole);
+                }
+            }
             var result = await _userManager.UpdateAsync(existingUser);
 
             if (result.Succeeded)
@@ -167,24 +182,39 @@ namespace C_proj_MKMN.Controllers
         }
 
         // GET: AdminPanelController/Delete/5
-        public ActionResult Delete(int id)
+        // GET: AdministrationController/Delete/5
+        public async Task<IActionResult> Delete(string? id)
         {
-            return View();
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
         }
 
-        // POST: AdminPanelController/Delete/5
-        [HttpPost]
+        // POST: AdministrationController/Delete/5
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(string? id)
         {
-            try
+            if (_userManager.Users == null)
             {
-                return RedirectToAction(nameof(Index));
+                return Problem("Entity set 'ApplicationDbContext.Users'  is null.");
             }
-            catch
+            var user = await _userManager.FindByIdAsync(id);
+            if (user != null)
             {
-                return View();
+                await _userManager.DeleteAsync(user);
             }
+
+            return RedirectToAction(nameof(GetUsers));
+        }
+        private bool UserExists(string id)
+        {
+            return (_context.Users?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
+
