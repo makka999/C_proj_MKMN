@@ -103,15 +103,13 @@ namespace C_proj_MKMN.Controllers
             }
 
             existingUser.Id = updatedUser.Id; 
-          
-            //existingUser.PasswordLengthRequirement = updatedUser.PasswordLengthRequirement;
-            //existingUser.Version = Guid.NewGuid().ToByteArray();
+            existingUser.PasswordIndividualLength = updatedUser.PasswordIndividualLength;
             existingUser.Email = updatedUser.Email;
             existingUser.NormalizedEmail = updatedUser.Email.ToUpper();
             existingUser.UserName = updatedUser.UserName;
             existingUser.NormalizedUserName = updatedUser.UserName.ToUpper();
-            //existingUser.LockoutEnabled = updatedUser.LockoutEnabled;
-            //existingUser.LockoutEnd = updatedUser.LockoutEnd;
+            existingUser.LockoutEnabled = updatedUser.LockoutEnabled;
+            existingUser.LockoutEnd = updatedUser.LockoutEnd;
             existingUser.EmailConfirmed = updatedUser.EmailConfirmed;
            
             if (!string.IsNullOrEmpty(selectedRole))
@@ -161,28 +159,7 @@ namespace C_proj_MKMN.Controllers
         }
 
 
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: AdminPanelController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
         // GET: AdminPanelController/Delete/5
-        // GET: AdministrationController/Delete/5
         public async Task<IActionResult> Delete(string? id)
         {
             var user = await _userManager.FindByIdAsync(id);
@@ -194,7 +171,7 @@ namespace C_proj_MKMN.Controllers
             return View(user);
         }
 
-        // POST: AdministrationController/Delete/5
+        // POST: AdminPanelController/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string? id)
@@ -211,10 +188,63 @@ namespace C_proj_MKMN.Controllers
 
             return RedirectToAction(nameof(GetUsers));
         }
+
+        public IActionResult ChangePassword(string userId)
+        {
+            // Pobierz użytkownika na podstawie userId
+            var user = _userManager.FindByIdAsync(userId).Result;
+
+            if (user != null)
+            {
+                var model = new ChangePasswordViewModel
+                {
+                    UserId = user.Id,
+                    UserName = user.UserName
+                };
+                return View(model);
+            }
+
+            // Obsłuż błąd, jeśli użytkownik nie został znaleziony
+            return NotFound();
+        }
+
+        //[HttpPost]
+        //public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var user = await _userManager.FindByIdAsync(model.UserId);
+        //        if (user != null)
+        //        {
+        //            var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+        //            if (result.Succeeded)
+        //            {
+        //                // Sukces - hasło zostało zmienione
+        //                return RedirectToAction("Index", "Admin"); // Przekieruj do strony administracyjnej
+        //            }
+        //            foreach (var error in result.Errors)
+        //            {
+        //                ModelState.AddModelError(string.Empty, error.Description);
+        //            }
+        //        }
+        //    }
+        //    return View(model);
+        //}
+
+        internal class ChangePasswordViewModel
+        {
+            public string UserId { get; set; }
+            public string UserName { get; set; }
+            public string CurrentPassword { get; internal set; }
+            public string NewPassword { get; internal set; }
+        }
+
         private bool UserExists(string id)
         {
             return (_context.Users?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
+
+
 }
 

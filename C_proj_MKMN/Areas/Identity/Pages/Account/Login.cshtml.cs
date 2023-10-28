@@ -121,17 +121,17 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
                         // Przykładowa logika dla użytkowników z rolą "Admin".
                         return LocalRedirect("/AdminPanel/GetUsers"); // Przykładowa akcja dla admina
                     }
-                    else if (Input.Username == "User")
+                    else
                     {
 
                         return LocalRedirect("~/Identity/Account/Manage/ChangePassword");
 
                         //return LocalRedirect("ChangePassword"); // Przykładowa akcja dla użytkownika
                     }
-                    else
-                    {
-                        return LocalRedirect(returnUrl);
-                    }
+                    //else
+                    //{
+                    //    return LocalRedirect(returnUrl);
+                    //}
                     //return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

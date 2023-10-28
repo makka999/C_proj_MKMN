@@ -24,6 +24,18 @@ builder.Services.AddAuthorization(options =>
          policy => policy.RequireRole("USER"));
 });
 
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 1;
+    options.Password.RequiredUniqueChars = 0;
+    options.SignIn.RequireConfirmedAccount = true;
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
