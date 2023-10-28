@@ -191,7 +191,6 @@ namespace C_proj_MKMN.Controllers
 
         public IActionResult ChangePassword(string userId)
         {
-            // Pobierz użytkownika na podstawie userId
             var user = _userManager.FindByIdAsync(userId).Result;
 
             if (user != null)
@@ -203,8 +202,6 @@ namespace C_proj_MKMN.Controllers
                 };
                 return View(model);
             }
-
-            // Obsłuż błąd, jeśli użytkownik nie został znaleziony
             return NotFound();
         }
 
