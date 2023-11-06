@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using static System.Net.Mime.MediaTypeNames;
+using C_proj_MKMN.Data;
 
 namespace C_proj_MKMN.Areas.Identity.Pages.Account
 {
@@ -22,11 +24,14 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<UserModel> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly ApplicationDbContext _db; 
 
-        public LoginModel(SignInManager<UserModel> signInManager, ILogger<LoginModel> logger)
+
+        public LoginModel(SignInManager<UserModel> signInManager, ILogger<LoginModel> logger, ApplicationDbContext db)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _db = db;
         }
 
         /// <summary>
@@ -118,8 +123,36 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
                     _logger.LogInformation("User logged in.");
                     if (Input.Username == "ADMIN")
                     {
+                        var log = new LogListModel
+                        {
+                            UserName = Input.Username,
+                            Log = "Logowanie ok",
+                            Opis = "ok",
+                            DateTime = DateTime.Now
+                        };
+
+                        _db.LogListModels.Add(log);
+                        _db.SaveChanges();
+
+
+
                         // Przykładowa logika dla użytkowników z rolą "Admin".
                         return LocalRedirect("/AdminPanel/GetUsers"); // Przykładowa akcja dla admina
+
+
+
+
+                        //using (var context = new ApplicationDbContext())
+                        //{
+                        //    var t = new LogListModels
+                        //    {
+                        //        ID = Guid.NewGuid(),
+                        //        name = "blah",
+                        //    };
+                        //    context.AddTotest(t);
+                        //    context.SaveChanges();
+                        //}
+
                     }
                     else
                     {
