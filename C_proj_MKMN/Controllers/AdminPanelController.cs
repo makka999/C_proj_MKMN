@@ -14,11 +14,20 @@ namespace C_proj_MKMN.Controllers
         private readonly UserManager<UserModel> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _context;
+        /*private readonly LogService _logService;*/
         
 
-        public AdminPanelController(UserManager<UserModel> userManager)
+        public AdminPanelController(
+            UserManager<UserModel> userManager,
+            RoleManager<IdentityRole> roleManager,
+            ApplicationDbContext context
+          /*  LogService logService*/
+            )
         {
-            this._userManager = userManager;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _context = context;
+            /*_logService = logService;*/
         }
 
         // GET: AdminPanelController
@@ -70,7 +79,7 @@ namespace C_proj_MKMN.Controllers
             }
 
             var user = await _userManager.FindByIdAsync(id);
-            Console.WriteLine(user);
+           
             
             if (user == null)
             {
@@ -203,6 +212,12 @@ namespace C_proj_MKMN.Controllers
                 return View(model);
             }
             return NotFound();
+        }
+        public ActionResult LogList( int id)
+        {
+            var userActivities = _context.LogListModels.ToList();
+
+            return View(userActivities);
         }
 
         //[HttpPost]

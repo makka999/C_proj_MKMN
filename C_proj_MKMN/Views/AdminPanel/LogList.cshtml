@@ -1,0 +1,45 @@
+﻿
+@model List<LogListModel>
+
+
+
+@if(Model !=null && Model.Count > 0)
+{
+    <div class="card overflow-auto">
+        <div class="card-body">
+            <h3 class="card-title">User Logs:</h3>
+            <hr />
+                @foreach (var log in Model)
+                {
+                    <div class="card-body bg-light border border d-flex flex-grow-1 justify-content-sm-between m-2">
+                        <div class="d-flex gap-1">
+                            <p> @log.IdLogList .</p>
+                            <p><b>Username:</b>  @log.UserName</p>
+                        </div>
+                        <div class="d-flex gap-1">
+                        @if (log.Opis == "Login failed")
+                        {
+                            <b>Message:</b><p class="text-danger"> @log.Opis</p>
+                        }
+                        else
+                        {
+
+                            <b>Message:</b>
+
+                            <p class="text-success"> @log.Opis</p>
+                        } 
+                        </div>
+
+                    </div>
+  
+                }   
+        </div>
+    </div>
+}
+else
+{
+    <p>There is nothing to display here!</p>
+}
+
+      
+    
