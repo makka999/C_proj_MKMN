@@ -126,46 +126,31 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
                         var log = new LogListModel
                         {
                             UserName = Input.Username,
-                            Log = "Logowanie ok",
-                            Opis = "ok",
+                            Log = "Logowanie Admin",
+                            Opis = "Successful login",
                             DateTime = DateTime.Now
                         };
 
                         _db.LogListModels.Add(log);
                         _db.SaveChanges();
-
-
-
-                        // Przykładowa logika dla użytkowników z rolą "Admin".
                         return LocalRedirect("/AdminPanel/GetUsers"); // Przykładowa akcja dla admina
-
-
-
-
-                        //using (var context = new ApplicationDbContext())
-                        //{
-                        //    var t = new LogListModels
-                        //    {
-                        //        ID = Guid.NewGuid(),
-                        //        name = "blah",
-                        //    };
-                        //    context.AddTotest(t);
-                        //    context.SaveChanges();
-                        //}
-
                     }
                     else
                     {
+                        var log = new LogListModel
+                        {
+                            UserName = Input.Username,
+                            Log = $"Logowanie {Input.Username}",
+                            Opis = "Successful login",
+                            DateTime = DateTime.Now
+                        };
 
+                        _db.LogListModels.Add(log);
+                        _db.SaveChanges();
                         return LocalRedirect("~/Identity/Account/Manage/ChangePassword");
 
-                        //return LocalRedirect("ChangePassword"); // Przykładowa akcja dla użytkownika
                     }
-                    //else
-                    //{
-                    //    return LocalRedirect(returnUrl);
-                    //}
-                    //return LocalRedirect(returnUrl);
+
                 }
                 if (result.RequiresTwoFactor)
                 {
@@ -178,6 +163,16 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
                 }
                 else
                 {
+                    var log = new LogListModel
+                    {
+                        UserName = Input.Username,
+                        Log = $"Logowanie {Input.Username} nieudane",
+                        Opis = "Login failed",
+                        DateTime = DateTime.Now
+                    };
+
+                    _db.LogListModels.Add(log);
+                    _db.SaveChanges();
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }
