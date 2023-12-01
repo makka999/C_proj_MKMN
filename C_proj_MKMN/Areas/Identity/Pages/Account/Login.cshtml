@@ -5,16 +5,15 @@
     ViewData["Title"] = "Log in";
 }
 
-
-<div class="row d-flex justify-content-center">   
+<div class="row d-flex justify-content-center">
     <div class="col-md-4">
         <section>
-            <form id="account" method="post">   
+            <form id="account" method="post">
                 <h1>@ViewData["Title"]</h1>
                 <hr />
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                 <div class="form-floating mb-3">
-                    <input asp-for="Input.Username" class="form-control" autocomplete="username" aria-required="true" placeholder="Np. Jan" />
+                    <input id="Input_Username" asp-for="Input.Username" class="form-control" autocomplete="username" aria-required="true" placeholder="Np. Jan" />
                     <label asp-for="Input.Username" class="form-label">User Name</label>
                     <span asp-validation-for="Input.Username" class="text-danger"></span>
                 </div>
@@ -22,6 +21,13 @@
                     <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
                     <label asp-for="Input.Password" class="form-label">Password</label>
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <p >Variable A: <span id="VariableA_Length">0</span></p>
+                <p>Variable X: @Model.Input.VariableX</p>
+                <div class="form-floating mb-3">
+                    <label asp-for="Input.GeneratedPassword" class="form-label">Generated Password</label>
+                    <input asp-for="Input.GeneratedPassword" class="form-control" aria-required="true" placeholder="Enter the result of A/X" />
+                    <span asp-validation-for="Input.GeneratedPassword" class="text-danger"></span>
                 </div>
                 <div class="checkbox mb-3">
                     <label asp-for="Input.RememberMe" class="form-label">
@@ -32,13 +38,28 @@
                 <div>
                     <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
                 </div>
-               
             </form>
         </section>
     </div>
-    
 </div>
 
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var usernameInput = document.getElementById("Input_Username");
+            var variableALengthElement = document.getElementById("VariableA_Length");
+
+            if (usernameInput && variableALengthElement) {
+                usernameInput.addEventListener("input", function () {
+                    // Update the content of the element with the length of the username
+                    variableALengthElement.innerText = usernameInput.value.length;
+                });
+            }
+        });
+    </script>
+
+
     <partial name="_ValidationScriptsPartial" />
 }

@@ -24,7 +24,8 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<UserModel> _signInManager;
         private readonly ILogger<LoginModel> _logger;
-        private readonly ApplicationDbContext _db; 
+        private readonly ApplicationDbContext _db;
+      
 
 
         public LoginModel(SignInManager<UserModel> signInManager, ILogger<LoginModel> logger, ApplicationDbContext db)
@@ -32,6 +33,8 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _db = db;
+           
+
         }
 
         /// <summary>
@@ -66,26 +69,31 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
+            public InputModel()
+            {
+                // Generate 'a' based on the length of the username
+                VariableA = 0; // Default value, adjust as needed
+            }
+
             [Required]
-           
             public string Username { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Required]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
+            [Display(Name = "Generated Password")]
+            public string GeneratedPassword { get; set; }
+
+            [Required]
+            [Display(Name = "Variable A")]
+            public int VariableA { get; set; }
+
+            [Required]
+            [Display(Name = "Variable X")]
+            public int VariableX { get; set; }
+
+
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
         }
@@ -103,6 +111,13 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            Input ??= new InputModel();
+
+           
+                Input.VariableX = new Random().Next(1,20);
+            
+
+            Input.VariableA = Input.Username?.Length??1;
 
             ReturnUrl = returnUrl;
         }
@@ -115,6 +130,18 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+                // Validate the generated password
+                int a = Input.VariableA;
+                int x = Input.VariableX;
+                string expectedGeneratedPassword = GeneratePassword(a, x);
+
+                if (Input.GeneratedPassword != expectedGeneratedPassword)
+                {
+                    // Password validation failed
+                    ModelState.AddModelError(nameof(Input.GeneratedPassword), "Invalid generated password");
+                    return Page();
+                }
+
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Username, Input.Password, Input.RememberMe, lockoutOnFailure: true);
@@ -180,6 +207,11 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
 
             // If we got this far, something failed, redisplay form
             return Page();
+        }
+        private string GeneratePassword(int a, int x)
+        {
+            // Implement logic to generate the password based on the a/x equation
+            return (a / x).ToString();
         }
     }
 }

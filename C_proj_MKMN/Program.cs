@@ -36,7 +36,9 @@ builder.Services.AddDefaultIdentity<UserModel>(
     }
 )
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddPasswordValidator<CustomPasswordValidator>();
+
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthorization(options =>
@@ -59,6 +61,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 });
 
 
+    
 
 var app = builder.Build();
 
