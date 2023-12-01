@@ -137,7 +137,6 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                // Validate the generated password
                 int a = Input.Username.Length;
                 int x = HttpContext.Session.GetInt32("VariableX") ?? 1;
          
@@ -145,13 +144,11 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
 
                 if (Input.GeneratedPassword != expectedGeneratedPassword)
                 {
-                    // Password validation failed
                     ModelState.AddModelError(nameof(Input.GeneratedPassword), "Invalid generated password");
-                    return Page();
+                    return RedirectToPage("./AccessDenied");
                 }
 
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+               
                 var result = await _signInManager.PasswordSignInAsync(Input.Username, Input.Password, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
