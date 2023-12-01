@@ -25,8 +25,8 @@
                 <p >Variable A: <span id="VariableA_Length"></span></p>
                 <p>Variable X: @Model.Input.VariableX</p>
                 <div class="form-floating mb-3">
-                    <label asp-for="Input.GeneratedPassword" class="form-label">Generated Password</label>
                     <input asp-for="Input.GeneratedPassword" class="form-control" aria-required="true" placeholder="Enter the result of A/X" />
+                    <label asp-for="Input.GeneratedPassword" class="form-label">Generated Password</label>
                     <span asp-validation-for="Input.GeneratedPassword" class="text-danger"></span>
                 </div>
                 <div class="checkbox mb-3">
