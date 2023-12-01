@@ -1,5 +1,7 @@
 using C_proj_MKMN.Data;
 using C_proj_MKMN.Models;
+using C_proj_MKMN.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,9 +14,19 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddSingleton<ISystemClock, UtcSystemClock>();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(1);
+    //options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
+});
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(1); // Set your desired expiration time
+    options.SlidingExpiration = true;
+    options.Cookie.SameSite = SameSiteMode.Strict;
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
 });
 builder.Services.AddDefaultIdentity<UserModel>(
     options => { 
@@ -62,7 +74,7 @@ else
     app.UseHsts();
 }
 
-
+app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
