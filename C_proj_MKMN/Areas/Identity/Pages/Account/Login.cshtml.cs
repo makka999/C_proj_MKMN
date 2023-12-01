@@ -26,8 +26,8 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
         private readonly SignInManager<UserModel> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly ApplicationDbContext _db;
-      
-
+        private int X;
+        private string resultPassword;
 
         public LoginModel(SignInManager<UserModel> signInManager, ILogger<LoginModel> logger, ApplicationDbContext db)
         {
@@ -99,7 +99,7 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
         }
-        int VariableX = new Random().Next(1, 20);
+        
 
         public async Task OnGetAsync(string returnUrl = null)
         {
@@ -117,9 +117,13 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
             Input ??= new InputModel();
 
 
-            Input.VariableX = VariableX;
 
-
+            if(Input.VariableX == 0)
+            {
+               Input.VariableX = 1;
+            }
+            Input.VariableX = new Random().Next(1, 200);
+            HttpContext.Session.SetInt32("VariableX", Input.VariableX);
             //int VariableA = Input.Username?.Length??1;
 
             ReturnUrl = returnUrl;
@@ -134,9 +138,10 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 // Validate the generated password
-                int a = Input.Username?.Length ?? 1;
-                int x = VariableX;
-                string expectedGeneratedPassword = GeneratePassword(a, x);
+                int a = Input.Username.Length;
+                int x = HttpContext.Session.GetInt32("VariableX") ?? 1;
+         
+                string expectedGeneratedPassword = GeneratePassword(a,x);
 
                 if (Input.GeneratedPassword != expectedGeneratedPassword)
                 {
@@ -213,8 +218,11 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
         }
         private string GeneratePassword(int a, int x)
         {
+            double wynik = (double)a / x;
+            string result = wynik.ToString("0.00");
+            
             // Implement logic to generate the password based on the a/x equation
-            return (a / x).ToString();
+            return result;
         }
     }
 }
