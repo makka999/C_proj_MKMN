@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using static System.Net.Mime.MediaTypeNames;
 using C_proj_MKMN.Data;
+using C_proj_MKMN.Migrations;
 
 namespace C_proj_MKMN.Areas.Identity.Pages.Account
 {
@@ -73,6 +74,7 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
             {
                 // Generate 'a' based on the length of the username
                 VariableA = 0; // Default value, adjust as needed
+                //VariableX = new Random().Next(1, 20); // Default value, adjust as needed
             }
 
             [Required]
@@ -97,6 +99,7 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
         }
+        int VariableX = new Random().Next(1, 20);
 
         public async Task OnGetAsync(string returnUrl = null)
         {
@@ -113,11 +116,11 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             Input ??= new InputModel();
 
-           
-                Input.VariableX = new Random().Next(1,20);
-            
 
-            Input.VariableA = Input.Username?.Length??1;
+            Input.VariableX = VariableX;
+
+
+            //int VariableA = Input.Username?.Length??1;
 
             ReturnUrl = returnUrl;
         }
@@ -131,8 +134,8 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 // Validate the generated password
-                int a = Input.VariableA;
-                int x = Input.VariableX;
+                int a = Input.Username?.Length ?? 1;
+                int x = VariableX;
                 string expectedGeneratedPassword = GeneratePassword(a, x);
 
                 if (Input.GeneratedPassword != expectedGeneratedPassword)

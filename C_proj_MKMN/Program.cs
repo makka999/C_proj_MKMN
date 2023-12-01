@@ -29,15 +29,15 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.IsEssential = true;
 });
 builder.Services.AddDefaultIdentity<UserModel>(
-    options => { 
-    options.SignIn.RequireConfirmedAccount = true;
-    options.Lockout.MaxFailedAccessAttempts = 5;
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+    options => {
+        options.SignIn.RequireConfirmedAccount = true;
+        options.Lockout.MaxFailedAccessAttempts = 5;
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
     }
 )
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddPasswordValidator<CustomPasswordValidator>();
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+    //.AddPasswordValidator<CustomPasswordValidator>();
 
 
 builder.Services.AddControllersWithViews();
