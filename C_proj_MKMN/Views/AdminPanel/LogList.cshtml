@@ -16,6 +16,9 @@
                             <p> @log.IdLogList .</p>
                             <p><b>Username:</b>  @log.UserName</p>
                         </div>
+                    <div class="d-flex gap-1">
+                        <p><b>Log:</b>  @log.Log</p>
+                    </div>
                         <div class="d-flex gap-1">
                         @if (log.Opis == "Login failed")
                         {
@@ -29,6 +32,9 @@
                             <p class="text-success"> @log.Opis</p>
                         } 
                         </div>
+                    <div class="d-flex gap-1">
+                        <p><b>Time:</b>  @log.DateTime</p>
+                    </div>
 
                     </div>
   
