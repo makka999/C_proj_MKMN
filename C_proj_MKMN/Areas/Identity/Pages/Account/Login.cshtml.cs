@@ -136,22 +136,20 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             if (ModelState.IsValid)
-            {
-                int a = Input.Username.Length;
-                int x = HttpContext.Session.GetInt32("VariableX") ?? 1;
-         
-                string expectedGeneratedPassword = GeneratePassword(a,x);
-
-                if (Input.GeneratedPassword != expectedGeneratedPassword)
-                {
-                    ModelState.AddModelError(nameof(Input.GeneratedPassword), "Invalid generated password");
-                    return RedirectToPage("./AccessDenied");
-                }
-
-               
+            {               
                 var result = await _signInManager.PasswordSignInAsync(Input.Username, Input.Password, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
+                    int a = Input.Username.Length;
+                    int x = HttpContext.Session.GetInt32("VariableX") ?? 1;
+
+                    string expectedGeneratedPassword = GeneratePassword(a, x);
+
+                    if (Input.GeneratedPassword != expectedGeneratedPassword)
+                    {
+                        ModelState.AddModelError(nameof(Input.GeneratedPassword), "Invalid generated password");
+                        return RedirectToPage("./AccessDenied");
+                    }
                     _logger.LogInformation("User logged in.");
                     if (Input.Username == "ADMIN")
                     {
