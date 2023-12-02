@@ -5,42 +5,43 @@
 
 @if(Model !=null && Model.Count > 0)
 {
-    <div class="card overflow-auto">
-        <div class="card-body">
-            <h3 class="card-title">User Logs:</h3>
-            <hr />
-                @foreach (var log in Model)
-                {
-                    <div class="card-body bg-light border border d-flex flex-grow-1 justify-content-sm-between m-2">
-                        <div class="d-flex gap-1">
-                            <p> @log.IdLogList .</p>
-                            <p><b>Username:</b>  @log.UserName</p>
-                        </div>
-                    <div class="d-flex gap-1">
-                        <p><b>Log:</b>  @log.Log</p>
-                    </div>
-                        <div class="d-flex gap-1">
+<div class="card overflow-auto">
+    <div class="card-body">
+        <h3 class="card-title">User Logs:</h3>
+        <hr />
+        @foreach (var log in Model)
+        {
+            <div class="row m-2 bg-light border">
+                <div class="col-sm-3">
+                        <p> @log.IdLogList .<b>Username:</b> @log.UserName</p>
+                </div>
+                <div class="col-sm-3">
+                    <p><b>Log:</b> @log.Log</p>
+                </div>
+                <div class="col-sm-3">
                         @if (log.Opis == "Login failed")
                         {
-                            <b>Message:</b><p class="text-danger"> @log.Opis</p>
+                            <div>
+                            <b>Message:</b>
+                            <span class="text-danger"> @log.Opis</span>
+                            </div>
                         }
                         else
                         {
-
+                            <div>
                             <b>Message:</b>
-
-                            <p class="text-success"> @log.Opis</p>
-                        } 
-                        </div>
-                    <div class="d-flex gap-1">
-                        <p><b>Time:</b>  @log.DateTime</p>
+                            <span class="text-success"> @log.Opis</span>
+                            </div>
+                        }
                     </div>
-
-                    </div>
-  
-                }   
-        </div>
+                <div class="col-sm-3">
+                    <p><b>Time:</b> @log.DateTime</p>
+                </div>
+            </div>
+        }   
     </div>
+</div>
+
 }
 else
 {
