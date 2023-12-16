@@ -148,6 +148,13 @@ namespace C_proj_MKMN.Areas.Identity.Pages.Account
                     if (Input.GeneratedPassword != expectedGeneratedPassword)
                     {
                         ModelState.AddModelError(nameof(Input.GeneratedPassword), "Invalid generated password");
+                        var log = new LogListModel
+                        {
+                            UserName = Input.Username,
+                            Log = "Błędne hasło generowane Admin",
+                            Opis = "Odmowa dostępu",
+                            DateTime = DateTime.Now
+                        };
                         return RedirectToPage("./AccessDenied");
                     }
                     _logger.LogInformation("User logged in.");
